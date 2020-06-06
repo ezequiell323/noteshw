@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "/public")));
 
-
+let allNotes=[];
 
 // Basic route that sends the user first to the AJAX Page
 app.get("/", function (req, res) {
@@ -50,7 +50,22 @@ app.post("/api/notes", function (req, res) {
 
 });
 
+app.delete("/api/notes/:id", function (req, res) {
 
+  var id = req.params.id;
+  fs.readFile(__dirname + "/db/db.json", "utf-8", function read(err, data) {
+    notes = JSON.parse(data);
+    notes.splice(id,1);
+    fs.writeFile(__dirname + "/db/db.json", JSON.stringify(notes),function read(err,data) {
+      if (err) {
+        return console.log(err);
+      }
+      console.log("the file was deleted notes")
+    });
+  });
+  res.json(id);
+
+});
 
 
 
